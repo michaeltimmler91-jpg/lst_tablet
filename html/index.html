@@ -7,6 +7,42 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <aside id="dispatchAlert" class="dispatch-alert hidden" aria-live="polite">
+        <div class="dispatch-accent" id="dispatchAccent"></div>
+
+        <div class="dispatch-content">
+            <div class="dispatch-header">
+                <span class="dispatch-icon" id="dispatchIcon">🚕</span>
+                <div>
+                    <div class="dispatch-title">TAXI LEITSTELLE</div>
+                    <div class="dispatch-subtitle" id="dispatchSubtitle">Neuer Auftrag</div>
+                </div>
+            </div>
+
+            <div class="dispatch-body">
+                <div class="dispatch-row">
+                    <span>📍</span>
+                    <strong id="dispatchPickup">Unbekannt</strong>
+                </div>
+
+                <div class="dispatch-row">
+                    <span>🎯</span>
+                    <strong id="dispatchDestination">-</strong>
+                </div>
+
+                <div class="dispatch-row">
+                    <span>👤</span>
+                    <strong id="dispatchCustomer">-</strong>
+                </div>
+            </div>
+
+            <div class="dispatch-footer">
+                <span class="dispatch-key">F2</span>
+                <span>Tablet öffnen</span>
+            </div>
+        </div>
+    </aside>
+
     <main id="tablet" class="hidden">
         <div class="tablet-stage" id="tabletStage">
             <section class="tablet-frame" id="tabletFrame">
