@@ -42,18 +42,36 @@ function loadSettings() {
     applySettings();
 }
 
-function requestClose() {
-    fetch(`https://${GetParentResourceName()}/close`, {
+function postNuiCallback(name, payload = {}) {
+    fetch(`https://${GetParentResourceName()}/${name}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
-    });
+        body: JSON.stringify(payload)
+    }).catch(() => {});
+}
+
+function requestClose() {
+    postNuiCallback('close');
 }
 
 window.addEventListener('message', function(event) {
-    if (!event.data || !event.data.action) return;
+    if (!event.data) return;
+
+    if (event.data.source === 'los-santos-taxi') {
+        if (event.data.type === 'new_job') {
+            postNuiCallback('taxiNewJobAlert', event.data.payload || {});
+        }
+
+        if (event.data.type === 'idle_warning') {
+            postNuiCallback('taxiIdleWarning');
+        }
+
+        return;
+    }
+
+    if (!event.data.action) return;
 
     if (event.data.action === 'open') {
         tablet.classList.remove('hidden');
