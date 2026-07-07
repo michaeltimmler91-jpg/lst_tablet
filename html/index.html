@@ -8,44 +8,44 @@
 </head>
 <body>
     <main id="tablet" class="hidden">
-        <section class="tablet-frame" id="tabletFrame">
-            <header class="tablet-topbar">
-                <div class="tablet-title">Los Santos Taxi</div>
+        <div class="tablet-stage" id="tabletStage">
+            <section class="tablet-frame" id="tabletFrame">
+                <header class="tablet-topbar">
+                    <div class="tablet-title">Los Santos Taxi</div>
 
-                <div class="tablet-buttons">
-                    <button id="settingsBtn" type="button" title="Einstellungen">⚙</button>
-                    <button id="closeBtn" type="button" title="Schließen">×</button>
-                </div>
-            </header>
+                    <div class="tablet-buttons">
+                        <button id="settingsBtn" type="button" title="Einstellungen">⚙</button>
+                        <button id="closeBtn" type="button" title="Schließen">×</button>
+                    </div>
+                </header>
 
-            <aside id="settingsPanel" class="settings-panel hidden">
-                <h3>Tablet-Einstellungen</h3>
+                <aside id="settingsPanel" class="settings-panel hidden">
+                    <h3>Tablet-Einstellungen</h3>
 
-                <label for="opacitySlider">
-                    <span>Transparenz</span>
-                    <strong id="opacityValue">100%</strong>
-                </label>
-                <input id="opacitySlider" type="range" min="20" max="100" value="100">
+                    <label for="opacitySlider">
+                        <span>Transparenz</span>
+                        <strong id="opacityValue">100%</strong>
+                    </label>
+                    <input id="opacitySlider" type="range" min="20" max="100" value="100">
 
-                <label for="zoomSlider">
-                    <span>Webseiten-Zoom</span>
-                    <strong id="zoomValue">100%</strong>
-                </label>
-                <input id="zoomSlider" type="range" min="70" max="120" value="100">
+                    <label for="sizeSlider">
+                        <span>Tablet-Größe</span>
+                        <strong id="sizeValue">100%</strong>
+                    </label>
+                    <input id="sizeSlider" type="range" min="70" max="120" value="100">
 
-                <button id="settingsCloseBtn" type="button">Schließen</button>
-            </aside>
+                    <button id="settingsCloseBtn" type="button">Schließen</button>
+                </aside>
 
-            <section class="tablet-screen" id="tabletScreen">
-                <div class="webview-canvas" id="webviewCanvas">
+                <section class="tablet-screen" id="tabletScreen">
                     <iframe
                         src="https://los-santos-taxi.michaeltimmler91.workers.dev/"
                         frameborder="0"
                         allow="clipboard-read; clipboard-write">
                     </iframe>
-                </div>
+                </section>
             </section>
-        </section>
+        </div>
     </main>
 
     <script src="app.js"></script>
