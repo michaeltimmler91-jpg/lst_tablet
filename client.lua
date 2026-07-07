@@ -39,7 +39,9 @@ local function showTaxiNotification(title, message)
 end
 
 local function playTabletBing()
-    PlaySoundFrontend(-1, 'TIMER_STOP', 'HUD_MINI_GAME_SOUNDSET', true)
+    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+    Wait(120)
+    PlaySoundFrontend(-1, 'SELECT', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 end
 
 local function startTabletAnim()
@@ -131,6 +133,15 @@ RegisterCommand('taxitablet', function()
     else
         openTablet()
     end
+end, false)
+
+RegisterCommand('taxitablettest', function()
+    playTabletBing()
+
+    showTaxiNotification(
+        'Taxi',
+        'IC-Sound-Test vom Taxi-Tablet.'
+    )
 end, false)
 
 RegisterNUICallback('close', function(_, cb)
