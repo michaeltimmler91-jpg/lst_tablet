@@ -1,6 +1,6 @@
 const tablet = document.getElementById('tablet');
+const tabletStage = document.getElementById('tabletStage');
 const tabletFrame = document.getElementById('tabletFrame');
-const webviewCanvas = document.getElementById('webviewCanvas');
 
 const closeBtn = document.getElementById('closeBtn');
 const settingsBtn = document.getElementById('settingsBtn');
@@ -10,8 +10,8 @@ const settingsCloseBtn = document.getElementById('settingsCloseBtn');
 const opacitySlider = document.getElementById('opacitySlider');
 const opacityValue = document.getElementById('opacityValue');
 
-const zoomSlider = document.getElementById('zoomSlider');
-const zoomValue = document.getElementById('zoomValue');
+const sizeSlider = document.getElementById('sizeSlider');
+const sizeValue = document.getElementById('sizeValue');
 
 function saveSetting(key, value) {
     localStorage.setItem(`lstTablet_${key}`, String(value));
@@ -23,24 +23,21 @@ function loadSetting(key, fallback) {
 
 function applySettings() {
     const opacity = Number(opacitySlider.value);
-    const zoom = Number(zoomSlider.value) / 100;
+    const size = Number(sizeSlider.value);
 
     tabletFrame.style.opacity = opacity / 100;
-
-    webviewCanvas.style.transform = `scale(${zoom})`;
-    webviewCanvas.style.width = `${100 / zoom}%`;
-    webviewCanvas.style.height = `${100 / zoom}%`;
+    tabletStage.style.transform = `scale(${size / 100})`;
 
     opacityValue.textContent = `${opacity}%`;
-    zoomValue.textContent = `${Math.round(zoom * 100)}%`;
+    sizeValue.textContent = `${size}%`;
 
     saveSetting('opacity', opacity);
-    saveSetting('zoom', Math.round(zoom * 100));
+    saveSetting('size', size);
 }
 
 function loadSettings() {
     opacitySlider.value = loadSetting('opacity', '100');
-    zoomSlider.value = loadSetting('zoom', '100');
+    sizeSlider.value = loadSetting('size', '100');
 
     applySettings();
 }
@@ -81,7 +78,7 @@ settingsCloseBtn.addEventListener('click', function() {
 });
 
 opacitySlider.addEventListener('input', applySettings);
-zoomSlider.addEventListener('input', applySettings);
+sizeSlider.addEventListener('input', applySettings);
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
