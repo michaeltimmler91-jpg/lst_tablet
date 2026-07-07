@@ -44,6 +44,25 @@ local function playTabletBing()
     PlaySoundFrontend(-1, 'SELECT', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 end
 
+local function sendDispatchCard(rideType, pickup, destination, customer)
+    print(('[lst_tablet] Dispatch-Karte: %s | %s | %s | %s'):format(
+        rideType or '-',
+        pickup or '-',
+        destination or '-',
+        customer or '-'
+    ))
+
+    SendNUIMessage({
+        action = 'dispatch',
+        payload = {
+            rideType = rideType or 'Neuer Auftrag',
+            pickup = pickup or 'Unbekannt',
+            destination = destination or '-',
+            customer = customer or '-'
+        }
+    })
+end
+
 local function startTabletAnim()
     local ped = PlayerPedId()
 
@@ -138,15 +157,12 @@ end, false)
 RegisterCommand('taxitablettest', function()
     playTabletBing()
 
-    SendNUIMessage({
-        action = 'dispatch',
-        payload = {
-            rideType = 'Normale Fahrt',
-            pickup = 'Pillbox Hill',
-            destination = 'LS Airport',
-            customer = 'Testkunde'
-        }
-    })
+    sendDispatchCard(
+        'Normale Fahrt',
+        'Pillbox Hill',
+        'LS Airport',
+        'Testkunde'
+    )
 
     showTaxiNotification(
         'Taxi',
@@ -160,22 +176,23 @@ RegisterNUICallback('close', function(_, cb)
 end)
 
 RegisterNUICallback('taxiNewJobAlert', function(data, cb)
-    playTabletBing()
-
     local rideType = data and data.rideType or 'Neuer Auftrag'
     local pickup = data and data.pickup or 'Unbekannt'
     local destination = data and data.destination or '-'
     local customer = data and data.customer or '-'
 
-    SendNUIMessage({
-        action = 'dispatch',
-        payload = {
-            rideType = rideType,
-            pickup = pickup,
-            destination = destination,
-            customer = customer
-        }
-    })
+    print(('[lst_tablet] Neuer Auftrag Callback: %s | %s | %s | %s'):format(
+        rideType,
+        pickup,
+        destination,
+        customer
+    ))
+
+    playTabletBing()
+
+    SetTimeout(150, function()
+        sendDispatchCard(rideType, pickup, destination, customer)
+    end)
 
     showTaxiNotification(
         'Taxi',
