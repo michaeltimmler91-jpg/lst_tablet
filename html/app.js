@@ -20,6 +20,8 @@ const dispatchSubtitle = document.getElementById('dispatchSubtitle');
 const dispatchPickup = document.getElementById('dispatchPickup');
 const dispatchDestination = document.getElementById('dispatchDestination');
 const dispatchCustomer = document.getElementById('dispatchCustomer');
+const dispatchDestinationRow = document.getElementById('dispatchDestinationRow');
+const dispatchCustomerRow = document.getElementById('dispatchCustomerRow');
 
 let dispatchTimer = null;
 let dispatchHideTimer = null;
@@ -89,6 +91,11 @@ function getDispatchIcon(rideType) {
     return '🚕';
 }
 
+function isUsefulValue(value) {
+    const text = String(value || '').trim();
+    return text !== '' && text !== '-' && text.toLowerCase() !== 'unbekannt';
+}
+
 function showDispatchAlert(payload = {}) {
     if (!dispatchAlert) return;
 
@@ -102,8 +109,20 @@ function showDispatchAlert(payload = {}) {
     dispatchIcon.textContent = getDispatchIcon(rideType);
     dispatchSubtitle.textContent = rideType;
     dispatchPickup.textContent = pickup;
-    dispatchDestination.textContent = destination;
-    dispatchCustomer.textContent = customer;
+
+    if (isUsefulValue(destination)) {
+        dispatchDestination.textContent = destination;
+        dispatchDestinationRow.classList.remove('hidden');
+    } else {
+        dispatchDestinationRow.classList.add('hidden');
+    }
+
+    if (isUsefulValue(customer)) {
+        dispatchCustomer.textContent = customer;
+        dispatchCustomerRow.classList.remove('hidden');
+    } else {
+        dispatchCustomerRow.classList.add('hidden');
+    }
 
     clearTimeout(dispatchTimer);
     clearTimeout(dispatchHideTimer);
