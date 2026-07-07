@@ -13,6 +13,17 @@ const opacityValue = document.getElementById('opacityValue');
 const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
 
+const dispatchAlert = document.getElementById('dispatchAlert');
+const dispatchAccent = document.getElementById('dispatchAccent');
+const dispatchIcon = document.getElementById('dispatchIcon');
+const dispatchSubtitle = document.getElementById('dispatchSubtitle');
+const dispatchPickup = document.getElementById('dispatchPickup');
+const dispatchDestination = document.getElementById('dispatchDestination');
+const dispatchCustomer = document.getElementById('dispatchCustomer');
+
+let dispatchTimer = null;
+let dispatchHideTimer = null;
+
 function saveSetting(key, value) {
     localStorage.setItem(`lstTablet_${key}`, String(value));
 }
@@ -56,6 +67,61 @@ function requestClose() {
     postNuiCallback('close');
 }
 
+function getDispatchTypeClass(rideType) {
+    const type = String(rideType || '').toLowerCase();
+
+    if (type.includes('essen')) return 'food';
+    if (type.includes('ems')) return 'ems';
+    if (type.includes('gebraucht')) return 'dealer';
+    if (type.includes('bambi')) return 'bambi';
+
+    return '';
+}
+
+function getDispatchIcon(rideType) {
+    const type = String(rideType || '').toLowerCase();
+
+    if (type.includes('essen')) return '🍔';
+    if (type.includes('ems')) return '🚑';
+    if (type.includes('gebraucht')) return '🚗';
+    if (type.includes('bambi')) return '🐣';
+
+    return '🚕';
+}
+
+function showDispatchAlert(payload = {}) {
+    if (!dispatchAlert) return;
+
+    const rideType = payload.rideType || 'Neuer Auftrag';
+    const pickup = payload.pickup || 'Unbekannt';
+    const destination = payload.destination || '-';
+    const customer = payload.customer || '-';
+    const typeClass = getDispatchTypeClass(rideType);
+
+    dispatchAccent.className = `dispatch-accent ${typeClass}`.trim();
+    dispatchIcon.textContent = getDispatchIcon(rideType);
+    dispatchSubtitle.textContent = rideType;
+    dispatchPickup.textContent = pickup;
+    dispatchDestination.textContent = destination;
+    dispatchCustomer.textContent = customer;
+
+    clearTimeout(dispatchTimer);
+    clearTimeout(dispatchHideTimer);
+
+    dispatchAlert.classList.remove('hidden', 'hide');
+    dispatchAlert.classList.add('show');
+
+    dispatchTimer = setTimeout(() => {
+        dispatchAlert.classList.remove('show');
+        dispatchAlert.classList.add('hide');
+
+        dispatchHideTimer = setTimeout(() => {
+            dispatchAlert.classList.add('hidden');
+            dispatchAlert.classList.remove('hide');
+        }, 420);
+    }, 8000);
+}
+
 window.addEventListener('message', function(event) {
     if (!event.data) return;
 
@@ -82,6 +148,10 @@ window.addEventListener('message', function(event) {
     if (event.data.action === 'close') {
         tablet.classList.add('hidden');
         settingsPanel.classList.add('hidden');
+    }
+
+    if (event.data.action === 'dispatch') {
+        showDispatchAlert(event.data.payload || {});
     }
 });
 
