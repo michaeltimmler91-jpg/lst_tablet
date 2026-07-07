@@ -194,11 +194,6 @@ RegisterNUICallback('taxiNewJobAlert', function(data, cb)
         sendDispatchCard(rideType, pickup, destination, customer)
     end)
 
-    showTaxiNotification(
-        'Taxi',
-        ('Neuer Auftrag: %s\nAbholung: %s'):format(rideType, pickup)
-    )
-
     cb('ok')
 end)
 
