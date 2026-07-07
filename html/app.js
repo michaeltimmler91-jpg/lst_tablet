@@ -25,6 +25,8 @@ const dispatchCustomerRow = document.getElementById('dispatchCustomerRow');
 
 let dispatchTimer = null;
 let dispatchHideTimer = null;
+let lastDispatchId = null;
+let lastDispatchAt = 0;
 
 function saveSetting(key, value) {
     localStorage.setItem(`lstTablet_${key}`, String(value));
@@ -99,6 +101,16 @@ function isUsefulValue(value) {
 function showDispatchAlert(payload = {}) {
     if (!dispatchAlert) return;
 
+    const dispatchId = payload.id || `${payload.rideType || ''}-${payload.pickup || ''}-${payload.destination || ''}`;
+    const now = Date.now();
+
+    if (dispatchId === lastDispatchId && now - lastDispatchAt < 2500) {
+        return;
+    }
+
+    lastDispatchId = dispatchId;
+    lastDispatchAt = now;
+
     const rideType = payload.rideType || 'Neuer Auftrag';
     const pickup = payload.pickup || 'Unbekannt';
     const destination = payload.destination || '-';
@@ -146,7 +158,9 @@ window.addEventListener('message', function(event) {
 
     if (event.data.source === 'los-santos-taxi') {
         if (event.data.type === 'new_job') {
-            postNuiCallback('taxiNewJobAlert', event.data.payload || {});
+            const payload = event.data.payload || {};
+            showDispatchAlert(payload);
+            postNuiCallback('taxiNewJobAlert', payload);
         }
 
         if (event.data.type === 'idle_warning') {
