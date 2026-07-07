@@ -24,6 +24,24 @@ local function loadModel(model)
     return hash
 end
 
+local function showTaxiNotification(title, message)
+    BeginTextCommandThefeedPost('STRING')
+    AddTextComponentSubstringPlayerName(message or '')
+    EndTextCommandThefeedPostMessagetext(
+        'CHAR_TAXI',
+        'CHAR_TAXI',
+        false,
+        4,
+        title or 'Taxi',
+        'Los Santos Taxi'
+    )
+    EndTextCommandThefeedPostTicker(false, false)
+end
+
+local function playTabletBing()
+    PlaySoundFrontend(-1, 'TIMER_STOP', 'HUD_MINI_GAME_SOUNDSET', true)
+end
+
 local function startTabletAnim()
     local ped = PlayerPedId()
 
@@ -117,6 +135,31 @@ end, false)
 
 RegisterNUICallback('close', function(_, cb)
     closeTablet()
+    cb('ok')
+end)
+
+RegisterNUICallback('taxiNewJobAlert', function(data, cb)
+    playTabletBing()
+
+    local rideType = data and data.rideType or 'Neuer Auftrag'
+    local pickup = data and data.pickup or 'Unbekannt'
+
+    showTaxiNotification(
+        'Taxi',
+        ('Neuer Auftrag: %s\nAbholung: %s'):format(rideType, pickup)
+    )
+
+    cb('ok')
+end)
+
+RegisterNUICallback('taxiIdleWarning', function(_, cb)
+    playTabletBing()
+
+    showTaxiNotification(
+        'Taxi',
+        'Deine Sitzung läuft in 2 Minuten ab.\nÖffne das Tablet, um angemeldet zu bleiben.'
+    )
+
     cb('ok')
 end)
 
