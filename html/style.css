@@ -29,14 +29,22 @@ body {
     background: rgba(0, 0, 0, 0.08);
 }
 
-.tablet-frame {
-    position: relative;
+.tablet-stage {
     width: 90vw;
     height: 85vh;
     min-width: 900px;
     min-height: 600px;
     max-width: 1500px;
     max-height: 920px;
+    transform: scale(1);
+    transform-origin: center center;
+    will-change: transform;
+}
+
+.tablet-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     background: #070707;
     border: 18px solid #050505;
@@ -120,15 +128,7 @@ body {
     background: #fff;
 }
 
-.webview-canvas {
-    width: 100%;
-    height: 100%;
-    transform: scale(1);
-    transform-origin: top left;
-    will-change: transform;
-}
-
-.webview-canvas iframe {
+.tablet-screen iframe {
     display: block;
     width: 100%;
     height: 100%;
