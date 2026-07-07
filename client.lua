@@ -138,6 +138,16 @@ end, false)
 RegisterCommand('taxitablettest', function()
     playTabletBing()
 
+    SendNUIMessage({
+        action = 'dispatch',
+        payload = {
+            rideType = 'Normale Fahrt',
+            pickup = 'Pillbox Hill',
+            destination = 'LS Airport',
+            customer = 'Testkunde'
+        }
+    })
+
     showTaxiNotification(
         'Taxi',
         'IC-Sound-Test vom Taxi-Tablet.'
@@ -154,6 +164,18 @@ RegisterNUICallback('taxiNewJobAlert', function(data, cb)
 
     local rideType = data and data.rideType or 'Neuer Auftrag'
     local pickup = data and data.pickup or 'Unbekannt'
+    local destination = data and data.destination or '-'
+    local customer = data and data.customer or '-'
+
+    SendNUIMessage({
+        action = 'dispatch',
+        payload = {
+            rideType = rideType,
+            pickup = pickup,
+            destination = destination,
+            customer = customer
+        }
+    })
 
     showTaxiNotification(
         'Taxi',
