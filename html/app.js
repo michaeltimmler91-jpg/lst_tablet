@@ -60,6 +60,8 @@ function applyIcSoundSettings(payload = {}) {
         icSoundFile = payload.soundFile;
         saveSetting('icSoundFile', icSoundFile);
     }
+
+    console.log('[lst_tablet] IC Sound Settings', { icSoundEnabled, icVolume, icSoundFile });
 }
 
 function playIcSound(force = false) {
@@ -73,7 +75,11 @@ function playIcSound(force = false) {
     icAudio.volume = Math.max(0, Math.min(1, icVolume));
     icAudio.currentTime = 0;
 
-    icAudio.play().catch(() => {});
+    console.log('[lst_tablet] IC Sound play', { force, icSoundEnabled, icVolume, url: icAudio.src });
+
+    icAudio.play().catch((error) => {
+        console.log('[lst_tablet] IC Sound Fehler', error);
+    });
 }
 
 function applySettings() {
@@ -202,7 +208,7 @@ window.addEventListener('message', function(event) {
         }
 
         if (event.data.type === 'ic_sound_test') {
-            playIcSound(true);
+            postNuiCallback('taxiIcSoundTest');
         }
 
         if (event.data.type === 'new_job') {
@@ -236,6 +242,10 @@ window.addEventListener('message', function(event) {
     if (event.data.action === 'dispatch') {
         playIcSound(false);
         showDispatchAlert(event.data.payload || {});
+    }
+
+    if (event.data.action === 'icSoundTest') {
+        playIcSound(true);
     }
 });
 
