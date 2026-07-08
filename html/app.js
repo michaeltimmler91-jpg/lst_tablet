@@ -28,12 +28,52 @@ let dispatchHideTimer = null;
 let lastDispatchId = null;
 let lastDispatchAt = 0;
 
+let icSoundEnabled = loadSetting('icSoundEnabled', 'true') === 'true';
+let icVolume = Number(loadSetting('icVolume', '0.9'));
+let icSoundFile = loadSetting('icSoundFile', 'bing.mp3');
+let icAudio = null;
+
 function saveSetting(key, value) {
     localStorage.setItem(`lstTablet_${key}`, String(value));
 }
 
 function loadSetting(key, fallback) {
     return localStorage.getItem(`lstTablet_${key}`) || fallback;
+}
+
+function getIcSoundUrl() {
+    return `https://los-santos-taxi.michaeltimmler91.workers.dev/${icSoundFile}`;
+}
+
+function applyIcSoundSettings(payload = {}) {
+    if (typeof payload.icSoundEnabled === 'boolean') {
+        icSoundEnabled = payload.icSoundEnabled;
+        saveSetting('icSoundEnabled', String(icSoundEnabled));
+    }
+
+    if (payload.icVolume !== undefined) {
+        icVolume = Math.max(0, Math.min(1, Number(payload.icVolume)));
+        saveSetting('icVolume', icVolume);
+    }
+
+    if (payload.soundFile) {
+        icSoundFile = payload.soundFile;
+        saveSetting('icSoundFile', icSoundFile);
+    }
+}
+
+function playIcSound(force = false) {
+    if (!force && !icSoundEnabled) return;
+
+    if (!icAudio) {
+        icAudio = new Audio();
+    }
+
+    icAudio.src = getIcSoundUrl();
+    icAudio.volume = Math.max(0, Math.min(1, icVolume));
+    icAudio.currentTime = 0;
+
+    icAudio.play().catch(() => {});
 }
 
 function applySettings() {
@@ -157,13 +197,23 @@ window.addEventListener('message', function(event) {
     if (!event.data) return;
 
     if (event.data.source === 'los-santos-taxi') {
+        if (event.data.type === 'sound_settings') {
+            applyIcSoundSettings(event.data.payload || {});
+        }
+
+        if (event.data.type === 'ic_sound_test') {
+            playIcSound(true);
+        }
+
         if (event.data.type === 'new_job') {
             const payload = event.data.payload || {};
+            playIcSound(false);
             showDispatchAlert(payload);
             postNuiCallback('taxiNewJobAlert', payload);
         }
 
         if (event.data.type === 'idle_warning') {
+            playIcSound(false);
             postNuiCallback('taxiIdleWarning');
         }
 
@@ -184,6 +234,7 @@ window.addEventListener('message', function(event) {
     }
 
     if (event.data.action === 'dispatch') {
+        playIcSound(false);
         showDispatchAlert(event.data.payload || {});
     }
 });
