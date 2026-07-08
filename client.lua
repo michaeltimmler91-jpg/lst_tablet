@@ -63,6 +63,14 @@ local function sendDispatchCard(rideType, pickup, destination, customer)
     })
 end
 
+local function sendIcSoundTest()
+    print('[lst_tablet] IC-Sound-Test an NUI gesendet')
+
+    SendNUIMessage({
+        action = 'icSoundTest'
+    })
+end
+
 local function startTabletAnim()
     local ped = PlayerPedId()
 
@@ -155,6 +163,8 @@ RegisterCommand('taxitablet', function()
 end, false)
 
 RegisterCommand('taxitablettest', function()
+    sendIcSoundTest()
+
     sendDispatchCard(
         'Normale Fahrt',
         'Pillbox Hill',
@@ -166,6 +176,10 @@ RegisterCommand('taxitablettest', function()
         'Taxi',
         'IC-Sound-Test vom Taxi-Tablet.'
     )
+end, false)
+
+RegisterCommand('taxiictest', function()
+    sendIcSoundTest()
 end, false)
 
 RegisterNUICallback('close', function(_, cb)
@@ -201,6 +215,11 @@ RegisterNUICallback('taxiIdleWarning', function(_, cb)
         'Deine Sitzung läuft in 2 Minuten ab.\nÖffne das Tablet, um angemeldet zu bleiben.'
     )
 
+    cb('ok')
+end)
+
+RegisterNUICallback('taxiIcSoundTest', function(_, cb)
+    sendIcSoundTest()
     cb('ok')
 end)
 
