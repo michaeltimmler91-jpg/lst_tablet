@@ -40,7 +40,11 @@ end
 
 local function playTabletBing()
     PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    Wait(120)
+    Wait(80)
+    PlaySoundFrontend(-1, 'SELECT', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+    Wait(80)
+    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
+    Wait(80)
     PlaySoundFrontend(-1, 'SELECT', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
 end
 
@@ -60,14 +64,6 @@ local function sendDispatchCard(rideType, pickup, destination, customer)
             destination = destination or '-',
             customer = customer or '-'
         }
-    })
-end
-
-local function sendIcSoundTest()
-    print('[lst_tablet] IC-Sound-Test an NUI gesendet')
-
-    SendNUIMessage({
-        action = 'icSoundTest'
     })
 end
 
@@ -163,7 +159,7 @@ RegisterCommand('taxitablet', function()
 end, false)
 
 RegisterCommand('taxitablettest', function()
-    sendIcSoundTest()
+    playTabletBing()
 
     sendDispatchCard(
         'Normale Fahrt',
@@ -179,7 +175,7 @@ RegisterCommand('taxitablettest', function()
 end, false)
 
 RegisterCommand('taxiictest', function()
-    sendIcSoundTest()
+    playTabletBing()
 end, false)
 
 RegisterNUICallback('close', function(_, cb)
@@ -200,6 +196,8 @@ RegisterNUICallback('taxiNewJobAlert', function(data, cb)
         customer
     ))
 
+    playTabletBing()
+
     SetTimeout(150, function()
         sendDispatchCard(rideType, pickup, destination, customer)
     end)
@@ -219,7 +217,7 @@ RegisterNUICallback('taxiIdleWarning', function(_, cb)
 end)
 
 RegisterNUICallback('taxiIcSoundTest', function(_, cb)
-    sendIcSoundTest()
+    playTabletBing()
     cb('ok')
 end)
 
