@@ -210,7 +210,7 @@ RegisterNUICallback('taxiIdleWarning', function(_, cb)
 
     showTaxiNotification(
         'Taxi',
-        'Deine Sitzung läuft in 2 Minuten ab.\nÖffne das Tablet, um angemeldet zu bleiben.'
+        'Inaktivität erkannt. Du wirst in 2 Minuten automatisch auf Offline gesetzt. Öffne kurz das Tablet, um im Dienst zu bleiben.'
     )
 
     cb('ok')
