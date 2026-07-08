@@ -155,8 +155,6 @@ RegisterCommand('taxitablet', function()
 end, false)
 
 RegisterCommand('taxitablettest', function()
-    playTabletBing()
-
     sendDispatchCard(
         'Normale Fahrt',
         'Pillbox Hill',
@@ -187,8 +185,6 @@ RegisterNUICallback('taxiNewJobAlert', function(data, cb)
         destination,
         customer
     ))
-
-    playTabletBing()
 
     SetTimeout(150, function()
         sendDispatchCard(rideType, pickup, destination, customer)
